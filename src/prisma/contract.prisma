@@ -1,0 +1,39 @@
+// use prisma-8
+
+enum TransactionType {
+  expense
+  income
+}
+
+model Category {
+  id             ObjectId @id @map("_id")
+  name           String
+  color          String
+  type           TransactionType
+  createdAt      DateTime @onCreate(now())
+  updatedAt      DateTime @onUpdate(now())
+  transactions   Transaction[]
+
+  @@unique([name, type])
+
+  @@map("categories")
+}
+
+model Transaction {
+  id             ObjectId @id @map("_id")
+  description    String
+  amount         Float
+  date           DateTime
+  type           TransactionType
+  userId         String
+  createdAt      DateTime @onCreate(now())
+  updatedAt      DateTime @onUpdate(now())
+
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("transactions")
+
+  @@index([userId, date])
+  @@index([userId, date, categoryId])
+}

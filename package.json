@@ -1,10 +1,11 @@
 {
-  "name": "devbills-api",
+  "name": "financy-api",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "npx tsx watch ."
+    "dev": "npx tsx watch .",
+    "contract:emit": "prisma contract emit"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +14,14 @@
   "devDependencies": {
     "@biomejs/biome": "2.6.9",
     "@types/node": "^26.6.10",
+    "prisma": "^8.0.0-rc.35",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "fastify": "^5.12.8"
+    "@prisma/orm-mongo": "^8.0.0-rc.25",
+    "dotenv": "^18.0.10",
+    "fastify": "^5.12.8",
+    "mongodb": "^7.9.1"
   }
 }
