@@ -1,0 +1,685 @@
+[
+  {
+    "id": "collection.categories.create",
+    "label": "Create collection categories",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection categories does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "categories"
+        },
+        "expect": "notExists",
+        "object": "collection \"categories\""
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection categories",
+        "command": {
+          "kind": "createCollection",
+          "collection": "categories",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "color": {
+                  "bsonType": "string"
+                },
+                "createdAt": {
+                  "bsonType": "date"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "type": {
+                  "bsonType": "string",
+                  "enum": [
+                    "expense",
+                    "income"
+                  ]
+                },
+                "updatedAt": {
+                  "bsonType": "date"
+                }
+              },
+              "required": [
+                "_id",
+                "color",
+                "createdAt",
+                "name",
+                "type",
+                "updatedAt"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.transactions.create",
+    "label": "Create collection transactions",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection transactions does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "transactions"
+        },
+        "expect": "notExists",
+        "object": "collection \"transactions\""
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection transactions",
+        "command": {
+          "kind": "createCollection",
+          "collection": "transactions",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "amount": {
+                  "bsonType": "double"
+                },
+                "categoryId": {
+                  "bsonType": "string"
+                },
+                "createdAt": {
+                  "bsonType": "date"
+                },
+                "date": {
+                  "bsonType": "date"
+                },
+                "description": {
+                  "bsonType": "string"
+                },
+                "type": {
+                  "bsonType": "string",
+                  "enum": [
+                    "expense",
+                    "income"
+                  ]
+                },
+                "updatedAt": {
+                  "bsonType": "date"
+                },
+                "userId": {
+                  "bsonType": "string"
+                }
+              },
+              "required": [
+                "_id",
+                "amount",
+                "categoryId",
+                "createdAt",
+                "date",
+                "description",
+                "type",
+                "updatedAt",
+                "userId"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "index.categories.create(name_1_type_1)",
+    "label": "Create index name_1_type_1 on categories (name:1, type:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "no index named name_1_type_1 exists on categories",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "categories"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "name_1_type_1"
+        },
+        "expect": "notExists",
+        "object": "an index named \"name_1_type_1\" in \"categories\""
+      },
+      {
+        "description": "no index with the same keys and options exists on categories",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "categories"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "name": 1,
+                "type": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            },
+            {
+              "kind": "not",
+              "expr": {
+                "kind": "field",
+                "field": "sparse",
+                "op": "$eq",
+                "value": true
+              }
+            },
+            {
+              "kind": "exists",
+              "field": "expireAfterSeconds",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "partialFilterExpression",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "wildcardProjection",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "collation",
+              "exists": false
+            }
+          ]
+        },
+        "expect": "notExists",
+        "object": "an index on { name: 1, type: 1 } in \"categories\""
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index name_1_type_1 on categories",
+        "command": {
+          "kind": "createIndex",
+          "collection": "categories",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "name"
+            },
+            {
+              "direction": 1,
+              "field": "type"
+            }
+          ],
+          "unique": true,
+          "name": "name_1_type_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index name_1_type_1 exists on categories",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "categories"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "name_1_type_1"
+            },
+            {
+              "kind": "and",
+              "exprs": [
+                {
+                  "kind": "field",
+                  "field": "key",
+                  "op": "$eq",
+                  "value": {
+                    "name": 1,
+                    "type": 1
+                  }
+                },
+                {
+                  "kind": "field",
+                  "field": "unique",
+                  "op": "$eq",
+                  "value": true
+                },
+                {
+                  "kind": "not",
+                  "expr": {
+                    "kind": "field",
+                    "field": "sparse",
+                    "op": "$eq",
+                    "value": true
+                  }
+                },
+                {
+                  "kind": "exists",
+                  "field": "expireAfterSeconds",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "partialFilterExpression",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "wildcardProjection",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "collation",
+                  "exists": false
+                }
+              ]
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.transactions.create(userId_1_date_1)",
+    "label": "Create index userId_1_date_1 on transactions (userId:1, date:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "no index named userId_1_date_1 exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "userId_1_date_1"
+        },
+        "expect": "notExists",
+        "object": "an index named \"userId_1_date_1\" in \"transactions\""
+      },
+      {
+        "description": "no index with the same keys and options exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "userId": 1,
+                "date": 1
+              }
+            },
+            {
+              "kind": "not",
+              "expr": {
+                "kind": "field",
+                "field": "unique",
+                "op": "$eq",
+                "value": true
+              }
+            },
+            {
+              "kind": "not",
+              "expr": {
+                "kind": "field",
+                "field": "sparse",
+                "op": "$eq",
+                "value": true
+              }
+            },
+            {
+              "kind": "exists",
+              "field": "expireAfterSeconds",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "partialFilterExpression",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "wildcardProjection",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "collation",
+              "exists": false
+            }
+          ]
+        },
+        "expect": "notExists",
+        "object": "an index on { userId: 1, date: 1 } in \"transactions\""
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index userId_1_date_1 on transactions",
+        "command": {
+          "kind": "createIndex",
+          "collection": "transactions",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "userId"
+            },
+            {
+              "direction": 1,
+              "field": "date"
+            }
+          ],
+          "name": "userId_1_date_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index userId_1_date_1 exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "userId_1_date_1"
+            },
+            {
+              "kind": "and",
+              "exprs": [
+                {
+                  "kind": "field",
+                  "field": "key",
+                  "op": "$eq",
+                  "value": {
+                    "userId": 1,
+                    "date": 1
+                  }
+                },
+                {
+                  "kind": "not",
+                  "expr": {
+                    "kind": "field",
+                    "field": "unique",
+                    "op": "$eq",
+                    "value": true
+                  }
+                },
+                {
+                  "kind": "not",
+                  "expr": {
+                    "kind": "field",
+                    "field": "sparse",
+                    "op": "$eq",
+                    "value": true
+                  }
+                },
+                {
+                  "kind": "exists",
+                  "field": "expireAfterSeconds",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "partialFilterExpression",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "wildcardProjection",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "collation",
+                  "exists": false
+                }
+              ]
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.transactions.create(userId_1_date_1_categoryId_1)",
+    "label": "Create index userId_1_date_1_categoryId_1 on transactions (userId:1, date:1, categoryId:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "no index named userId_1_date_1_categoryId_1 exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "userId_1_date_1_categoryId_1"
+        },
+        "expect": "notExists",
+        "object": "an index named \"userId_1_date_1_categoryId_1\" in \"transactions\""
+      },
+      {
+        "description": "no index with the same keys and options exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "userId": 1,
+                "date": 1,
+                "categoryId": 1
+              }
+            },
+            {
+              "kind": "not",
+              "expr": {
+                "kind": "field",
+                "field": "unique",
+                "op": "$eq",
+                "value": true
+              }
+            },
+            {
+              "kind": "not",
+              "expr": {
+                "kind": "field",
+                "field": "sparse",
+                "op": "$eq",
+                "value": true
+              }
+            },
+            {
+              "kind": "exists",
+              "field": "expireAfterSeconds",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "partialFilterExpression",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "wildcardProjection",
+              "exists": false
+            },
+            {
+              "kind": "exists",
+              "field": "collation",
+              "exists": false
+            }
+          ]
+        },
+        "expect": "notExists",
+        "object": "an index on { userId: 1, date: 1, categoryId: 1 } in \"transactions\""
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index userId_1_date_1_categoryId_1 on transactions",
+        "command": {
+          "kind": "createIndex",
+          "collection": "transactions",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "userId"
+            },
+            {
+              "direction": 1,
+              "field": "date"
+            },
+            {
+              "direction": 1,
+              "field": "categoryId"
+            }
+          ],
+          "name": "userId_1_date_1_categoryId_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index userId_1_date_1_categoryId_1 exists on transactions",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transactions"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "userId_1_date_1_categoryId_1"
+            },
+            {
+              "kind": "and",
+              "exprs": [
+                {
+                  "kind": "field",
+                  "field": "key",
+                  "op": "$eq",
+                  "value": {
+                    "userId": 1,
+                    "date": 1,
+                    "categoryId": 1
+                  }
+                },
+                {
+                  "kind": "not",
+                  "expr": {
+                    "kind": "field",
+                    "field": "unique",
+                    "op": "$eq",
+                    "value": true
+                  }
+                },
+                {
+                  "kind": "not",
+                  "expr": {
+                    "kind": "field",
+                    "field": "sparse",
+                    "op": "$eq",
+                    "value": true
+                  }
+                },
+                {
+                  "kind": "exists",
+                  "field": "expireAfterSeconds",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "partialFilterExpression",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "wildcardProjection",
+                  "exists": false
+                },
+                {
+                  "kind": "exists",
+                  "field": "collation",
+                  "exists": false
+                }
+              ]
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  }
+]

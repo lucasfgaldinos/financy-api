@@ -17,9 +17,9 @@ import type {
 } from '@prisma/orm-mongo/contract-types';
 
 export type StorageHash =
-  StorageHashBase<'fecf9bd54c091cb6af2f7ae89ebc2d010983c37a5951623990e69ea97b07f1c5'>;
+  StorageHashBase<'30a57d991839767eed49a8fb04ed37cfc4ce38dc6ea483dda56f847203e68aab'>;
 export type ExecutionHash =
-  ExecutionHashBase<'31956115de7681214054eb9003ff0469209135910274aa29d42cdf24edf141c1'>;
+  ExecutionHashBase<'f3df182524004e4abbbd5933fa60b080ab8ddb6f88d4aee1818f5b723ba03535'>;
 export type ProfileHash =
   ProfileHashBase<'251b3ce23f6c9f561892e7c1af9d2cc941a13d64ba1aa7226b90036b09568cc3'>;
 
@@ -86,12 +86,19 @@ export namespace Models {
     category: unbound_Category;
     readonly [RelationKeys]?: 'category';
   };
+  export type unbound_User = {
+    email: FieldOutputTypes['__unbound__']['User']['email'];
+    id: FieldOutputTypes['__unbound__']['User']['id'];
+    name: FieldOutputTypes['__unbound__']['User']['name'];
+    readonly [RelationKeys]?: never;
+  };
 }
 
 export declare const models: {
   __unbound__: {
     Category: Models.unbound_Category;
     Transaction: Models.unbound_Transaction;
+    User: Models.unbound_User;
   };
 };
 
@@ -203,6 +210,32 @@ type ContractBase = Omit<
                 readonly validationLevel: 'strict';
               };
             };
+            readonly users: {
+              readonly indexes: readonly [
+                {
+                  readonly keys: readonly [{ readonly direction: 1; readonly field: 'email' }];
+                  readonly kind: 'mongo-index';
+                  readonly name: 'email_1';
+                  readonly unique: true;
+                },
+              ];
+              readonly kind: 'mongo-collection';
+              readonly validator: {
+                readonly jsonSchema: {
+                  readonly additionalProperties: false;
+                  readonly bsonType: 'object';
+                  readonly properties: {
+                    readonly _id: { readonly bsonType: 'objectId' };
+                    readonly email: { readonly bsonType: 'string' };
+                    readonly name: { readonly bsonType: 'string' };
+                  };
+                  readonly required: readonly ['_id', 'email', 'name'];
+                };
+                readonly kind: 'mongo-validator';
+                readonly validationAction: 'error';
+                readonly validationLevel: 'strict';
+              };
+            };
           };
         };
       };
@@ -222,6 +255,7 @@ type ContractBase = Omit<
       readonly namespace: '__unbound__' & NamespaceId;
       readonly model: 'Transaction';
     };
+    readonly users: { readonly namespace: '__unbound__' & NamespaceId; readonly model: 'User' };
   };
   readonly domain: {
     readonly namespaces: {
@@ -347,6 +381,31 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly User: {
+            readonly fields: {
+              readonly email: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/string@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/objectId@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/string@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly collection: 'users';
+              readonly fields: {
+                readonly email: { readonly field: 'email' };
+                readonly id: { readonly field: '_id' };
+                readonly name: { readonly field: 'name' };
+              };
+            };
+          };
         };
         readonly enum: {
           readonly TransactionType: {
@@ -381,6 +440,7 @@ type ContractBase = Omit<
           };
         },
         {
+          readonly onCreate: { readonly id: 'timestampNow'; readonly kind: 'generator' };
           readonly onUpdate: { readonly id: 'timestampNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'categories';
@@ -397,6 +457,7 @@ type ContractBase = Omit<
           };
         },
         {
+          readonly onCreate: { readonly id: 'timestampNow'; readonly kind: 'generator' };
           readonly onUpdate: { readonly id: 'timestampNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'transactions';

@@ -5,13 +5,20 @@ enum TransactionType {
   income
 }
 
+model User {
+  id    ObjectId @id @map("_id")
+  name  String
+  email String   @unique
+  @@map("users")
+}
+
 model Category {
   id             ObjectId @id @map("_id")
   name           String
   color          String
   type           TransactionType
-  createdAt      DateTime @onCreate(now())
-  updatedAt      DateTime @onUpdate(now())
+  createdAt      temporal.CreatedAt
+  updatedAt      temporal.UpdatedAt
   transactions   Transaction[]
 
   @@unique([name, type])
@@ -26,8 +33,8 @@ model Transaction {
   date           DateTime
   type           TransactionType
   userId         String
-  createdAt      DateTime @onCreate(now())
-  updatedAt      DateTime @onUpdate(now())
+  createdAt      temporal.CreatedAt
+  updatedAt      temporal.UpdatedAt
 
   categoryId String
   category Category @relation(fields: [categoryId], references: [id])

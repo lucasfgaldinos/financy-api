@@ -11,6 +11,10 @@
     "transactions": {
       "model": "Transaction",
       "namespace": "__unbound__"
+    },
+    "users": {
+      "model": "User",
+      "namespace": "__unbound__"
     }
   },
   "domain": {
@@ -246,6 +250,46 @@
                 }
               }
             }
+          },
+          "User": {
+            "fields": {
+              "email": {
+                "nullable": false,
+                "type": {
+                  "codecId": "mongo/string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "mongo/objectId@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "mongo/string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "collection": "users",
+              "fields": {
+                "email": {
+                  "field": "email"
+                },
+                "id": {
+                  "field": "_id"
+                },
+                "name": {
+                  "field": "name"
+                }
+              }
+            }
           }
         }
       }
@@ -406,6 +450,47 @@
                 "validationAction": "error",
                 "validationLevel": "strict"
               }
+            },
+            "users": {
+              "indexes": [
+                {
+                  "keys": [
+                    {
+                      "direction": 1,
+                      "field": "email"
+                    }
+                  ],
+                  "kind": "mongo-index",
+                  "name": "email_1",
+                  "unique": true
+                }
+              ],
+              "kind": "mongo-collection",
+              "validator": {
+                "jsonSchema": {
+                  "additionalProperties": false,
+                  "bsonType": "object",
+                  "properties": {
+                    "_id": {
+                      "bsonType": "objectId"
+                    },
+                    "email": {
+                      "bsonType": "string"
+                    },
+                    "name": {
+                      "bsonType": "string"
+                    }
+                  },
+                  "required": [
+                    "_id",
+                    "email",
+                    "name"
+                  ]
+                },
+                "kind": "mongo-validator",
+                "validationAction": "error",
+                "validationLevel": "strict"
+              }
             }
           },
           "valueSet": {
@@ -422,10 +507,10 @@
         "kind": "mongo-database"
       }
     },
-    "storageHash": "fecf9bd54c091cb6af2f7ae89ebc2d010983c37a5951623990e69ea97b07f1c5"
+    "storageHash": "30a57d991839767eed49a8fb04ed37cfc4ce38dc6ea483dda56f847203e68aab"
   },
   "execution": {
-    "executionHash": "31956115de7681214054eb9003ff0469209135910274aa29d42cdf24edf141c1",
+    "executionHash": "f3df182524004e4abbbd5933fa60b080ab8ddb6f88d4aee1818f5b723ba03535",
     "mutations": {
       "defaults": [
         {
@@ -440,6 +525,10 @@
           }
         },
         {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
           "onUpdate": {
             "id": "timestampNow",
             "kind": "generator"
@@ -462,6 +551,10 @@
           }
         },
         {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
           "onUpdate": {
             "id": "timestampNow",
             "kind": "generator"
