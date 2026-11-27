@@ -8,12 +8,19 @@ const envSchema = z.object({
   MONGODB_DATABASE_URL: z
     .string()
     .min(5, 'MONGODB_DATABASE_URL é obrigatório.'),
+  NODE_ENV: z.enum(
+    ['dev', 'test', 'prod'],
+    "NODE_ENV deve ser 'dev', 'test' ou 'prod'.",
+  ),
 });
 
 const _env = envSchema.safeParse(process.env);
 
 if (!_env.success) {
-  console.error('Variáveis de ambiente inválidas.');
+  console.error({
+    error: 'Variáveis de ambiente inválidas.',
+    message: _env.error.issues[0]?.message,
+  });
   process.exit(1);
 }
 
