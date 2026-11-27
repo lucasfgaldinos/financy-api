@@ -5,4 +5,4 @@ export const app: FastifyInstance = fastify({
   logger: true,
 });
 
-app.register(routes);
+app.register(routes, { prefix: '/api' });
